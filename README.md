@@ -27,3 +27,28 @@ shows the minimum dynamic plugin.
 
 The manager is C99-compatible. On POSIX systems link `plugin_manager.c` with
 `-ldl`; on Windows it uses `LoadLibraryA` and requires no extra library.
+
+## WinUI 3 desktop client
+
+The [`OurMp3.WinUI`](OurMp3.WinUI) project provides a Windows App SDK desktop
+client for the player. It currently supports:
+
+- selecting multiple MP3/WAV files with the native Windows file picker;
+- maintaining a local playlist and switching tracks;
+- importing by drag-and-drop, skipping duplicate files, and automatically
+  advancing to the next track;
+- play, pause, stop, and volume controls through `MediaPlayerElement`;
+- toggling play/pause with the Space key;
+- visible status and error feedback without interrupting the player window.
+
+Open [`OurMp3.WinUI/OurMp3.WinUI.csproj`](OurMp3.WinUI/OurMp3.WinUI.csproj) in
+Visual Studio 2022 with the Windows App SDK installed, or build it from the
+repository root:
+
+```powershell
+dotnet build OurMp3.WinUI\OurMp3.WinUI.csproj -p:Platform=x64
+```
+
+The client uses Windows' media playback pipeline for this first UI slice. The
+existing C plugin manager remains independent and can be connected to playback
+and decoder plugins through a future native bridge.
