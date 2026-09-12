@@ -1,0 +1,67 @@
+<Window
+    x:Class="OurMp3.WinUI.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:media="using:Microsoft.UI.Xaml.Controls">
+    <Grid x:Name="RootGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+          AllowDrop="True" DragOver="RootGrid_DragOver" Drop="RootGrid_Drop"
+          KeyDown="RootGrid_KeyDown" IsTabStop="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <CommandBar DefaultLabelPosition="Right">
+            <AppBarButton Icon="OpenFile" Label="打开音乐" Click="OpenFiles_Click" />
+            <AppBarButton Icon="Clear" Label="清空列表" Click="ClearPlaylist_Click" />
+            <CommandBar.Content>
+                <TextBlock Text="ourmp3" Style="{StaticResource SubtitleTextBlockStyle}"
+                           VerticalAlignment="Center" Margin="12,0,0,0" />
+            </CommandBar.Content>
+        </CommandBar>
+
+        <Grid Grid.Row="1" Padding="24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Spacing="16">
+                <Border CornerRadius="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        MinHeight="280">
+                    <media:MediaPlayerElement x:Name="Player" AreTransportControlsEnabled="True"
+                                              AutoPlay="False" Stretch="Uniform" />
+                </Border>
+                <TextBlock x:Name="TrackTitle" Text="请选择一个 MP3 文件开始播放"
+                           Style="{StaticResource TitleTextBlockStyle}" TextTrimming="CharacterEllipsis" />
+                <TextBlock x:Name="StatusText" Text="就绪" Opacity="0.7" />
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <Button Content="播放" Click="Play_Click" />
+                    <Button Content="暂停" Click="Pause_Click" />
+                    <Button Content="停止" Click="Stop_Click" />
+                    <TextBlock Text="音量" VerticalAlignment="Center" Margin="16,0,0,0" />
+                    <Slider x:Name="VolumeSlider" Width="140" Minimum="0" Maximum="1"
+                            Value="0.8" ValueChanged="VolumeSlider_ValueChanged" />
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Margin="24,0,0,0" Spacing="12">
+                <TextBlock x:Name="PlaylistSummary" Text="播放列表 (0)"
+                           Style="{StaticResource SubtitleTextBlockStyle}" />
+                <ListView x:Name="Playlist" SelectionChanged="Playlist_SelectionChanged">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <TextBlock Text="提示：也可以将 MP3/WAV 文件拖到窗口中"
+                           Opacity="0.6" TextWrapping="Wrap" />
+            </StackPanel>
+        </Grid>
+
+        <InfoBar x:Name="ErrorBar" Grid.Row="2" IsOpen="False" Severity="Error"
+                 IsClosable="True" Margin="24,0,24,16" />
+    </Grid>
+</Window>
