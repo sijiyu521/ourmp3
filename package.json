@@ -2,11 +2,18 @@
   "name": "ourmp3",
   "version": "1.0.0",
   "description": "一切皆插件的 MP3 播放器",
+  "author": "OurMP3",
+  "main": "electron/main.cjs",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "electron:dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "electron:build": "tsc && vite build && electron-builder --win",
+    "electron:start": "electron .",
+    "dist:win": "node scripts/build-win.mjs",
+    "verify:dist": "node scripts/verify-package.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -16,7 +23,49 @@
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "concurrently": "^10.0.5",
+    "electron": "^44.3.0",
+    "electron-builder": "^26.15.3",
     "typescript": "^5.5.4",
-    "vite": "^5.4.2"
+    "vite": "^5.4.2",
+    "wait-on": "^9.1.0"
+  },
+  "build": {
+    "appId": "com.ourmp3.app",
+    "productName": "OurMP3",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "signtoolOptions": {
+        "signingHashAlgorithms": ["sha256"],
+        "rfc3161TimeStampServer": "http://timestamp.digicert.com"
+      }
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "artifactName": "OurMP3-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "OurMP3-${version}-portable.${ext}"
+    }
   }
 }
